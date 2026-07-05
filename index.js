@@ -233,4 +233,42 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initial positioning
         setTimeout(updateSlideWidth, 200);
     }
+
+    // ==========================================================================
+    // Cookie Consent Banner
+    // ==========================================================================
+    const cookieBanner = document.getElementById('cookie-banner');
+    const cookieAccept = document.getElementById('cookie-accept');
+    const cookieDecline = document.getElementById('cookie-decline');
+
+    if (cookieBanner && cookieAccept && cookieDecline) {
+        const consent = localStorage.getItem('cookie-consent');
+
+        if (!consent) {
+            // Show banner after a slight delay for better UX
+            setTimeout(() => {
+                cookieBanner.classList.add('show');
+            }, 1000);
+        }
+
+        cookieAccept.addEventListener('click', () => {
+            localStorage.setItem('cookie-consent', 'accepted');
+            cookieBanner.classList.remove('show');
+            if (typeof gtag === 'function') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted'
+                });
+            }
+        });
+
+        cookieDecline.addEventListener('click', () => {
+            localStorage.setItem('cookie-consent', 'declined');
+            cookieBanner.classList.remove('show');
+            if (typeof gtag === 'function') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied'
+                });
+            }
+        });
+    }
 });
